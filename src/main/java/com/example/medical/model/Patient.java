@@ -15,37 +15,37 @@ public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     @Column(name = "name")
-    public String name;
+    private String name;
 
     @Column(name = "age")
-    public int age;
+    private int age;
 
     @Column(name = "email", unique = true, nullable = false)
-    public String email;
+    private String email;
 
     @Column(name = "phone", unique = true)
-    public String phone;
+    private String phone;
 
     @Column(name = "address")
-    public String address;
+    private String address;
 
     @Column(name = "gender")
-    public String gender;
+    private String gender;
 
     @Column(name = "health_history")
-    public String healthHistory;
+    private String healthHistory;
 
     @Column(name = "emergency_contact")
-    public String emergencyContact;
+    private String emergencyContact;
 
     @Column(name = "created_date")
-    public Date createdDate;
+    private Date createdDate;
 
     @Column(name = "updated_date")
-    public Date updatedDate;
+    private Date updatedDate;
 
 }
 
