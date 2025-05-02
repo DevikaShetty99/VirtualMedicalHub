@@ -26,4 +26,13 @@ public class Slot {
     private LocalDateTime endTime;  // End time of the slot
 
     private boolean isAvailable = true;  // Whether this slot is available for booking
+
+    // Getter and Setter for symptoms
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean val) {
+        this.isAvailable = val;
+    }
 }
