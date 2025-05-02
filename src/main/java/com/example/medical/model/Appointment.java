@@ -37,4 +37,70 @@ public class Appointment {
     private LocalDateTime updatedAt;  // Last update timestamp
 
     private String symptoms;
+
+    // Getters
+    public Long getId() {
+        return id;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public Slot getSlot() {
+        return slot;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getSymptoms() {
+        return symptoms;
+    }
+
+    // Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public void setSlot(Slot slot) {
+        this.slot = slot;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setSymptoms(String symptoms) {
+        this.symptoms = symptoms;
+    }
 }

@@ -12,6 +12,7 @@ import com.example.medical.repository.SlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,13 +59,22 @@ public class AppointmentService {
         slotRepository.save(slot);
 
         // Create Appointment
-        Appointment appointment = Appointment.builder()
-                .patient(patient)
-                .doctor(doctor)
-                .slot(slot)
-                .symptoms(request.getSymptoms())
-                .status("Scheduled")
-                .build();
+//        Appointment appointment = Appointment.builder()
+//                .patient(patient)
+//                .doctor(doctor)
+//                .slot(slot)
+//                .symptoms(request.getSymptoms())
+//                .status("Scheduled")
+//                .build();
+        Appointment appointment = new Appointment();
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
+        appointment.setSlot(slot);
+        appointment.setSymptoms(request.getSymptoms());
+        appointment.setStatus("Scheduled");
+        appointment.setCreatedAt(LocalDateTime.now());
+        appointment.setUpdatedAt(LocalDateTime.now());
+
 
         return appointmentRepository.save(appointment);
     }
