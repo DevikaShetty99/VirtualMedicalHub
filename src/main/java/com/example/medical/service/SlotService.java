@@ -20,12 +20,12 @@ public class SlotService {
         Doctor doctor = doctorRepository.findById(request.getDoctorId())
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-        Slot slot = Slot.builder()
-                .doctor(doctor)
-                .startTime(request.getStartTime())
-                .endTime(request.getEndTime())
-                .isAvailable(true)
-                .build();
+        Slot slot = new Slot();
+        slot.setDoctor(doctor);
+        slot.setStartTime(request.getStartTime());
+        slot.setEndTime(request.getEndTime());
+        slot.setAvailable(true);
+
 
         return slotRepository.save(slot);
     }

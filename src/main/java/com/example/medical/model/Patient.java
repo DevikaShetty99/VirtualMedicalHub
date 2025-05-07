@@ -17,35 +17,134 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+
     private String name;
 
-    @Column(name = "age")
+
     private int age;
 
-    @Column(name = "email", unique = true, nullable = false)
+
     private String email;
 
-    @Column(name = "phone", unique = true)
+
     private String phone;
 
-    @Column(name = "address")
+
     private String address;
 
-    @Column(name = "gender")
+
     private String gender;
 
-    @Column(name = "health_history")
+
     private String healthHistory;
 
-    @Column(name = "emergency_contact")
+
     private String emergencyContact;
 
-    @Column(name = "created_date")
+
     private Date createdDate;
 
-    @Column(name = "updated_date")
+
     private Date updatedDate;
+
+    // Getter and Setter for 'id'
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    // Getter and Setter for 'name'
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Getter and Setter for 'age'
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    // Getter and Setter for 'email'
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // Getter and Setter for 'phone'
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    // Getter and Setter for 'address'
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    // Getter and Setter for 'gender'
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    // Getter and Setter for 'healthHistory'
+    public String getHealthHistory() {
+        return healthHistory;
+    }
+
+    public void setHealthHistory(String healthHistory) {
+        this.healthHistory = healthHistory;
+    }
+
+    // Getter and Setter for 'emergencyContact'
+    public String getEmergencyContact() {
+        return emergencyContact;
+    }
+
+    public void setEmergencyContact(String emergencyContact) {
+        this.emergencyContact = emergencyContact;
+    }
+
+    // Getter and Setter for 'createdDate'
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    // Getter and Setter for 'updatedDate'
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
 
 }
 
