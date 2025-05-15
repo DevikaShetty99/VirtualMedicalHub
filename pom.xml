@@ -27,7 +27,8 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<!-- Set Java version to 17 -->
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -88,6 +89,8 @@
 			<artifactId>swagger-models-jakarta</artifactId>
 			<version>2.2.19</version>
 		</dependency>
+
+		
 	</dependencies>
 
 	<build>
@@ -96,6 +99,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
+					<source>17</source> <!-- Set the Java source version to 17 -->
+					<target>17</target> <!-- Set the Java target version to 17 -->
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
