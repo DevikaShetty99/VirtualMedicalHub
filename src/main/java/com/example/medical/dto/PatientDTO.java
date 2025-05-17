@@ -22,5 +22,6 @@ public class PatientDTO {
     private String emergencyContact;
     private Date createdDate;
     private Date updatedDate;
+    
 
 }

@@ -16,6 +16,7 @@ public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // Unique doctor ID
+    
 
     private String firstName;
 
@@ -28,6 +29,8 @@ public class Doctor {
     private String phone;
 
     private String location;  // For knowing where doctor is (optional)
+
+    private String password;  // For authentication
 
     // Getters
     public Long getId() {
@@ -58,6 +61,10 @@ public class Doctor {
         return location;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     // Setters
     public void setId(Long id) {
         this.id = id;
@@ -85,5 +92,9 @@ public class Doctor {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

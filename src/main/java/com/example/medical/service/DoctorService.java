@@ -47,5 +47,10 @@ public class DoctorService {
     public void deleteDoctor(Long id) {
         doctorRepository.deleteById(id);
     }
+
+    // Get doctor by name
+    public List<Doctor>getDoctorByName(String name) {
+        return doctorRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name);
+    }
 }
 

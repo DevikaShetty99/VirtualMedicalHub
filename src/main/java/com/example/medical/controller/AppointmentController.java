@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/appointments")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AppointmentController {
     @Autowired
     AppointmentService appointmentService;
@@ -36,5 +37,11 @@ public class AppointmentController {
     public ResponseEntity<List<Slot>> getAvailableSlots(@PathVariable Long doctorId) {
         List<Slot> availableSlots = appointmentService.getAvailableSlots(doctorId);
         return ResponseEntity.ok(availableSlots);
+    }
+
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<Appointment>> getAppointmentsByDoctor(@PathVariable Long doctorId) {
+        List<Appointment> appointments = appointmentService.getAppointmentsByDoctor(doctorId);
+        return ResponseEntity.ok(appointments);
     }
 }

@@ -9,6 +9,7 @@ public class DoctorRequest {
     private String email;
     private String phone;
     private String location;
+    private String password;  // For authentication
 
     public String getFirstName() {
         return firstName;
@@ -57,4 +58,14 @@ public class DoctorRequest {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
 }

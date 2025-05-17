@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
  
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/doctors")
 public class DoctorController {
@@ -27,6 +27,12 @@ public class DoctorController {
     public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
         return ResponseEntity.ok(doctorService.getDoctorById(id));
     }
+
+    // Get doctor by Name
+    @GetMapping("/{name}")
+    public ResponseEntity<List<Doctor>> getDoctorByName(@PathVariable String name) {
+        return ResponseEntity.ok(doctorService.getDoctorByName(name));
+    }
  
     // Create new doctor
     @PostMapping
@@ -39,6 +45,8 @@ public class DoctorController {
         doctor.setEmail(doctorRequest.getEmail());
         doctor.setPhone(doctorRequest.getPhone());
         doctor.setLocation(doctorRequest.getLocation());
+    
+        doctor.setPassword(doctorRequest.getPassword()); // For authentication
  
         return ResponseEntity.ok(doctorService.createDoctor(doctor));
     }
@@ -67,4 +75,6 @@ public class DoctorController {
         doctorService.deleteDoctor(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

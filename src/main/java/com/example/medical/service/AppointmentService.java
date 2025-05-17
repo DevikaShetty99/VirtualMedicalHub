@@ -92,4 +92,12 @@ public class AppointmentService {
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
         return slotRepository.findByDoctorAndIsAvailableTrue(doctor);
     }
+
+    // Get appointments for a doctor
+    public List<Appointment> getAppointmentsByDoctor(Long doctorId) {
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+        return appointmentRepository.findByDoctor(doctor);
+    }
+ 
 }
