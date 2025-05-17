@@ -29,7 +29,7 @@ public class DoctorController {
     }
 
     // Get doctor by Name
-    @GetMapping("/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity<List<Doctor>> getDoctorByName(@PathVariable String name) {
         return ResponseEntity.ok(doctorService.getDoctorByName(name));
     }
