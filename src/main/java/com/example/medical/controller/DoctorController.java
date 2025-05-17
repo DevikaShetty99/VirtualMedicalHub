@@ -1,10 +1,13 @@
 package com.example.medical.controller;
  
 import com.example.medical.model.Doctor;
+import com.example.medical.repository.DoctorRepository;
 import com.example.medical.dto.DoctorRequest;
+import com.example.medical.dto.DoctorLoginRequest;
 import com.example.medical.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
  
 import java.util.List;
@@ -15,6 +18,12 @@ public class DoctorController {
  
     @Autowired
     private DoctorService doctorService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
  
     // Get all doctors
     @GetMapping
@@ -46,7 +55,7 @@ public class DoctorController {
         doctor.setPhone(doctorRequest.getPhone());
         doctor.setLocation(doctorRequest.getLocation());
     
-        doctor.setPassword(doctorRequest.getPassword()); // For authentication
+        doctor.setPassword(passwordEncoder.encode(doctorRequest.getPassword())); // For authentication
  
         return ResponseEntity.ok(doctorService.createDoctor(doctor));
     }
@@ -76,5 +85,36 @@ public class DoctorController {
         return ResponseEntity.noContent().build();
     }
 
+    // @PostMapping("/login")
+    // public ResponseEntity<?> loginDoctor(@RequestBody DoctorLoginRequest request) {
+    //     Doctor doctor = doctorRepository.findByEmail(request.getEmail());
+
+    //     if (doctor == null || !passwordEncoder.matches(request.getPassword(), doctor.getPassword())) {
+    //         return ResponseEntity.status(401).body("Invalid credentials");
+    //     }
+
+    //     return ResponseEntity.ok(doctor); // or a DTO with just safe fields
+    // }
+
+    @PostMapping("/login")
+public ResponseEntity<?> loginDoctor(@RequestBody DoctorLoginRequest request) {
+    System.out.println("Login attempt for email: " + request.getEmail() + ", password: " + request.getPassword());
+
+    Doctor doctor = doctorRepository.findByEmail(request.getEmail());
+
+    if (doctor == null) {
+        System.out.println("Doctor not found");
+        return ResponseEntity.status(401).body("Invalid credentials");
+    }
+
+    boolean matches = passwordEncoder.matches(request.getPassword(), doctor.getPassword());
+    System.out.println("Password match result: " + matches);
+
+    if (!matches) {
+        return ResponseEntity.status(401).body("Invalid credentials");
+    }
+
+    return ResponseEntity.ok(doctor);
+}
 
 }

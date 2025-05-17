@@ -183,28 +183,48 @@ export default function DoctorRegistration() {
     }
   };
 
+  // const handleLoginSubmit = async (e) => {
+  //   e.preventDefault();
+  
+  //   try {
+  //     const response = await axios.get('http://localhost:8080/api/doctors');
+  //     const doctors = response.data;
+  
+  //     // ⚠️ Assume password is stored as plain text (bad in production)
+  //     const matchedDoctor = doctors.find(
+  //       doc => doc.email === loginData.email && doc.password === loginData.password
+  //     );
+  
+  //     if (matchedDoctor) {
+  //       navigate(`/dashboard/doctor/${matchedDoctor.id}`);
+  //     } else {
+  //       alert('Invalid email or password');
+  //     }
+  //   } catch (error) {
+  //     console.error('Login failed:', error);
+  //     alert('Login error. Please try again.');
+  //   }
+  // };
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
   
     try {
-      const response = await axios.get('http://localhost:8080/api/doctors');
-      const doctors = response.data;
+      const response = await axios.post('http://localhost:8080/api/doctors/login', loginData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
   
-      // ⚠️ Assume password is stored as plain text (bad in production)
-      const matchedDoctor = doctors.find(
-        doc => doc.email === loginData.email && doc.password === loginData.password
-      );
-  
-      if (matchedDoctor) {
-        navigate(`/dashboard/doctor/${matchedDoctor.id}`);
-      } else {
-        alert('Invalid email or password');
-      }
+      // 👇 If login is successful, you receive the doctor object
+      const doctor = response.data;
+      navigate(`/dashboard/doctor/${doctor.id}`);
     } catch (error) {
       console.error('Login failed:', error);
-      alert('Login error. Please try again.');
+      alert('Invalid email or password');
     }
   };
+  
 
   return (
     <Container maxWidth="sm">

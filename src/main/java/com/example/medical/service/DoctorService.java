@@ -3,6 +3,8 @@ package com.example.medical.service;
 import com.example.medical.model.Doctor;
 import com.example.medical.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +13,10 @@ import java.util.List;
 public class DoctorService {
     @Autowired
     DoctorRepository doctorRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     // Get all doctors
     public List<Doctor> getAllDoctors() {
@@ -52,5 +58,6 @@ public class DoctorService {
     public List<Doctor>getDoctorByName(String name) {
         return doctorRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name);
     }
+
 }
 
