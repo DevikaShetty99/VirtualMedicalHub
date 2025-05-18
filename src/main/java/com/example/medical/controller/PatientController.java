@@ -1,5 +1,6 @@
 package com.example.medical.controller;
 
+import com.example.medical.dto.PatientRequest;
 import com.example.medical.model.Patient;
 import com.example.medical.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/patients")
 public class PatientController {
     @Autowired
-    PatientService patientService;
+    private PatientService patientService;
     // Create or update a patient
     @PostMapping
     public ResponseEntity<Patient> createOrUpdatePatient(@RequestBody Patient patient) {
@@ -43,6 +45,38 @@ public class PatientController {
         patientService.deletePatient(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    // Update the Patient
+    @PutMapping("/{id}")
+public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody PatientRequest patientRequest) {
+    Optional<Patient> optionalPatient = patientService.getPatientById(id);
+
+    if (optionalPatient.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    Patient existingPatient = optionalPatient.get();
+
+    // Only update allowed fields if provided
+    if (patientRequest.getPhone() != null) {
+        existingPatient.setPhone(patientRequest.getPhone());
+    }
+    if (patientRequest.getAddress() != null) {
+        existingPatient.setAddress(patientRequest.getAddress());
+    }
+    if (patientRequest.getGender() != null) {
+        existingPatient.setGender(patientRequest.getGender());
+    }
+    if (patientRequest.getHealthHistory() != null) {
+        existingPatient.setHealthHistory(patientRequest.getHealthHistory());
+    }
+    if (patientRequest.getEmergencyContact() != null) {
+        existingPatient.setEmergencyContact(patientRequest.getEmergencyContact());
+    }
+
+    Patient updatedPatient = patientService.savePatient(existingPatient);
+    return new ResponseEntity<>(updatedPatient, HttpStatus.OK);
+}
 
 
 

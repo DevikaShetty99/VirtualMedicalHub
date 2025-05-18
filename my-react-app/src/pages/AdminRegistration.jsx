@@ -5,61 +5,56 @@ import {
   Typography,
   Button,
   TextField,
-  Tabs,
-  Tab,
   Paper,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-export default function AdminRegistration() {
-  const [tab, setTab] = useState(0);
+export default function AdminLogin() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleTabChange = (event, newValue) => {
-    setTab(newValue);
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    // Hardcoded admin credentials
+    if (
+      email === 'admin@vmh.com' &&
+      password === 'admin@virtual4@123'
+    ) {
+      navigate('/admin-dashboard');
+    } else {
+      alert('Invalid credentials!');
+    }
   };
 
   return (
     <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 5 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          Admin Portal
+          Admin Login
         </Typography>
 
-        <Tabs value={tab} onChange={handleTabChange} centered sx={{ mb: 2 }}>
-          <Tab label="Sign In" />
-          <Tab label="Register" />
-        </Tabs>
-
-        {tab === 0 && (
-          <Box component="form" noValidate autoComplete="off">
-            <TextField fullWidth label="Email" margin="normal" />
-            <TextField
-              fullWidth
-              label="Password"
-              type="password"
-              margin="normal"
-            />
-            <Button variant="contained" fullWidth sx={{ mt: 2 }}>
-              Sign In
-            </Button>
-          </Box>
-        )}
-
-        {tab === 1 && (
-          <Box component="form" noValidate autoComplete="off">
-            <TextField fullWidth label="Full Name" margin="normal" />
-            <TextField fullWidth label="Email" margin="normal" />
-            <TextField fullWidth label="Phone Number" margin="normal" />
-            <TextField
-              fullWidth
-              label="Create Password"
-              type="password"
-              margin="normal"
-            />
-            <Button variant="contained" fullWidth sx={{ mt: 2 }}>
-              Register
-            </Button>
-          </Box>
-        )}
+        <Box component="form" noValidate autoComplete="off" onSubmit={handleLogin}>
+          <TextField
+            fullWidth
+            label="Email"
+            margin="normal"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            type="password"
+            margin="normal"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+            Sign In
+          </Button>
+        </Box>
       </Paper>
     </Container>
   );
