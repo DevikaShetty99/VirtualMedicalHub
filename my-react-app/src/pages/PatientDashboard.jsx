@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
   Paper,
   CircularProgress,
   Divider,
-  Box
+  Box,
+  Button
 } from '@mui/material';
 import axios from 'axios';
 
@@ -16,25 +16,42 @@ const PatientDashboard = () => {
   const navigate = useNavigate();
   const [patient, setPatient] = useState(null);
   const [appointments, setAppointments] = useState([]);
+  const [prescriptions, setPrescriptions] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPatientAndAppointments = async () => {
+    const fetchPatientData = async () => {
       try {
         const [patientRes, appointmentsRes] = await Promise.all([
           axios.get(`http://localhost:8080/api/patients/${id}`),
           axios.get(`http://localhost:8080/api/appointments/patient/${id}`)
         ]);
+
+        const appts = appointmentsRes.data;
         setPatient(patientRes.data);
-        setAppointments(appointmentsRes.data);
+        setAppointments(appts);
+
+        const prescMap = {};
+        await Promise.all(
+          appts.map(async (appt) => {
+            try {
+              const res = await axios.get(`http://localhost:8080/api/prescriptions/appointment/${appt.id}`);
+              prescMap[appt.id] = res.data;
+            } catch (error) {
+              console.error('Error fetching prescription:', error);
+              prescMap[appt.id] = null; // No prescription found
+            }
+          })
+        );
+        setPrescriptions(prescMap);
       } catch (error) {
-        console.error('Error fetching patient or appointments:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPatientAndAppointments();
+    fetchPatientData();
   }, [id]);
 
   if (loading) {
@@ -110,10 +127,31 @@ const PatientDashboard = () => {
               </Typography>
               <Typography><strong>Created:</strong> {new Date(appt.createdAt).toLocaleString()}</Typography>
               <Typography><strong>Updated:</strong> {new Date(appt.updatedAt).toLocaleString()}</Typography>
+
+              {/* View Prescription Section */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2 }}>
+                {prescriptions[appt.id] ? (
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() =>
+                      navigate(`/patient/${id}/prescriptions/view/${prescriptions[appt.id].id}`)
+                    }
+                  >
+                    View Prescription
+                  </Button>
+                ) : (
+                  <Typography variant="body2" sx={{ fontStyle: 'italic', color: 'gray' }}>
+                    No prescription available
+                  </Typography>
+                )}
+              </Box>
             </Paper>
           ))
         )}
       </Paper>
+
+      {/* Create Appointment */}
       <Box textAlign="center" sx={{ mt: 4 }}>
         <button
           onClick={() => navigate(`/create-appointment/${id}`)}
@@ -135,3 +173,4 @@ const PatientDashboard = () => {
 };
 
 export default PatientDashboard;
+
