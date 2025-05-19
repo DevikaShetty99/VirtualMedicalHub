@@ -54,7 +54,7 @@ const App = () => {
           Welcome to Health Portal
         </Typography>
         <Typography variant="h6" gutterBottom>
-          Register as:
+          Register/Log In as:
         </Typography>
         <Stack spacing={2} direction="column" alignItems="center">
           <Button variant="contained" fullWidth onClick={() => navigate('/patient-registration')}>
@@ -63,10 +63,16 @@ const App = () => {
           <Button variant="contained" fullWidth onClick={() => navigate('/doctor-registration')}>
             Doctor
           </Button>
+          </Stack>
+          </Container>
+          <Container maxWidth="sm" style={{ marginTop: '100px', textAlign: 'center' }}>
+          <Typography variant="h6" gutterBottom>
+            LogIn as:
+          </Typography>
           <Button variant="contained" fullWidth onClick={() => navigate('/admin-registration')}>
             Admin
           </Button>
-        </Stack>
+        
       </Container>
 
       {/* Feedback Dialog */}
