@@ -21,6 +21,12 @@ public class AppointmentController {
     // Patient books an appointment
     @PostMapping
     public ResponseEntity<Appointment> bookAppointment(@RequestBody AppointmentRequest request) {
+        if (request.getPatientId() == null) {
+            throw new IllegalArgumentException("patientId cannot be null");
+        }
+        if (request.getDoctorId() == null) {
+            throw new IllegalArgumentException("doctorId cannot be null");
+        }
         Appointment appointment = appointmentService.bookAppointment(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(appointment);
     }

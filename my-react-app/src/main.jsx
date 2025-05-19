@@ -11,7 +11,8 @@ import AdminDashboard from './pages/AdminDashboard.jsx';
 import AdminDoctorList from './pages/AdminDoctorList.jsx';
 import AdminPatientList from './pages/AdminPatientList.jsx';
 import PatientHelpManual from './pages/PatientHelpManual'
-
+import PatientDashboard from './pages/PatientDashboard.jsx';
+import CreateAppointment from './pages/CreateAppointment.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -27,6 +28,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/admin/doctors" element={<AdminDoctorList />} />
         <Route path="/admin/doctors" element={<AdminPatientList />} />
         <Route path="/patient-help" element={<PatientHelpManual />} />
+        <Route path="/dashboard/patient/:id" element={<PatientDashboard />} />
+        <Route path="/create-appointment/:id" element={<CreateAppointment />} />
 
       </Routes>
     </Router>
