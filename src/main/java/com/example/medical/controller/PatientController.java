@@ -1,22 +1,29 @@
 package com.example.medical.controller;
 
 import com.example.medical.dto.PatientRequest;
+import com.example.medical.dto.PatientLoginRequest;
 import com.example.medical.model.Patient;
+import com.example.medical.repository.PatientRepository;
 import com.example.medical.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/patients")
 public class PatientController {
     @Autowired
     private PatientService patientService;
+    //  @Autowired
+    // private BCryptPasswordEncoder passwordEncoder;
+      @Autowired
+    PatientRepository patientRepository;
     // Create or update a patient
     @PostMapping
     public ResponseEntity<Patient> createOrUpdatePatient(@RequestBody Patient patient) {

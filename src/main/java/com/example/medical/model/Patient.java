@@ -47,6 +47,8 @@ public class Patient {
 
     private Date updatedDate;
 
+    private String password;    
+
     // Getter and Setter for 'id'
     public Long getId() {
         return id;
@@ -145,6 +147,12 @@ public class Patient {
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
     }
+    public String getPassword() {
+        return password;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
 
