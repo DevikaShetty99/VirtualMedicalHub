@@ -88,9 +88,7 @@ public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody
 @PostMapping("/login")
 public ResponseEntity<?> loginPatient(@RequestBody PatientLoginRequest request) {
     System.out.println("Login attempt for email: " + request.getEmail() + ", password: " + request.getPassword());
- 
     Patient patient = patientRepository.findByEmail(request.getEmail());
- 
     if (patient == null) {
         System.out.println("Patient not found");
         return ResponseEntity.status(401).body("Invalid credentials");
@@ -105,4 +103,5 @@ public ResponseEntity<?> loginPatient(@RequestBody PatientLoginRequest request) 
  
     return ResponseEntity.ok(patient);
 }
+
 }

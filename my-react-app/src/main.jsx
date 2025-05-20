@@ -13,6 +13,8 @@ import AdminPatientList from './pages/AdminPatientList.jsx';
 import PatientHelpManual from './pages/PatientHelpManual'
 import PatientDashboard from './pages/PatientDashboard.jsx';
 import CreateAppointment from './pages/CreateAppointment.jsx'
+import PrescriptionForm from './pages/PrescriptionForm.jsx';
+import PrescriptionView from './pages/PrescriptionView';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -30,7 +32,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/patient-help" element={<PatientHelpManual />} />
         <Route path="/dashboard/patient/:id" element={<PatientDashboard />} />
         <Route path="/create-appointment/:id" element={<CreateAppointment />} />
-
+        <Route path="/doctor/:id/prescriptions/new" element={<PrescriptionForm />} />
+        <Route path="/doctor/:id/prescriptions/view/:prescriptionId" element={<PrescriptionView />} />
+        <Route path="/patient/:patientId/prescriptions/view/:prescriptionId" element={<PrescriptionView />} />
       </Routes>
     </Router>
   </React.StrictMode>,

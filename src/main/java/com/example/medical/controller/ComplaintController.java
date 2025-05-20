@@ -5,9 +5,11 @@ import com.example.medical.dto.CreateComplaintRequest;
 import com.example.medical.model.Complaint;
 import com.example.medical.model.Doctor;
 import com.example.medical.model.Patient;
+import com.example.medical.model.Prescription;
 import com.example.medical.repository.ComplaintRepository;
 import com.example.medical.repository.DoctorRepository;
 import com.example.medical.repository.PatientRepository;
+import com.example.medical.service.PrescriptionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/complaints")
@@ -29,17 +32,8 @@ public class ComplaintController {
 
     @Autowired
     private DoctorRepository doctorRepository;
-
-    // @PostMapping
-    // public ResponseEntity<Complaint> createComplaint(@RequestBody Complaint complaint) {
-    //     if (complaint.getPatientId() == null || complaint.getDoctorId() == null ||
-    //         complaint.getSubject() == null || complaint.getMessage() == null) {
-    //         return ResponseEntity.badRequest().build();
-    //     }
-
-    //     Complaint savedComplaint = complaintRepository.save(complaint);
-    //     return ResponseEntity.ok(savedComplaint);
-    // }
+    @Autowired
+private PrescriptionService prescriptionService;
 
     @PostMapping
     public ResponseEntity<Complaint> createComplaint(@RequestBody CreateComplaintRequest request) {
