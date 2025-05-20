@@ -10,6 +10,9 @@ public class DoctorRequest {
     private String phone;
     private String location;
     private String password;  // For authentication
+    private String Experience; // years of experience
+    private String Education; // education details
+    private String Fees; // consultation fees
 
     public String getFirstName() {
         return firstName;
@@ -65,6 +68,25 @@ public class DoctorRequest {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getExperience() {
+        return Experience;
+    }
+    public void setExperience(String experience) {
+        Experience = experience;
+    }
+    public String getEducation() {
+        return Education;
+    }
+    public void setEducation(String education) {
+        Education = education;
+    }
+    public String getFees() {
+        return Fees;
+    }
+    public void setFees(String fees) {
+        Fees = fees;
     }
 
 

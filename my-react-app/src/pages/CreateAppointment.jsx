@@ -1,5 +1,5 @@
 // import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+// import { useNavigate, useParams } from 'react-router-dom';
 // import {
 //   Container,
 //   Typography,
@@ -15,22 +15,26 @@
 //   DialogActions,
 //   Alert
 // } from '@mui/material';
-// import { useParams } from 'react-router-dom';
 // import axios from 'axios';
 
 // const CreateAppointment = () => {
-//   // const { patientId } = useParams();
 //   const { id } = useParams();
 //   const patientId = id; 
 //   const navigate = useNavigate();  
+
 //   const [doctors, setDoctors] = useState([]);
 //   const [specializationFilter, setSpecializationFilter] = useState('');
 //   const [selectedDoctorId, setSelectedDoctorId] = useState('');
 //   const [startTime, setStartTime] = useState('');
 //   const [endTime, setEndTime] = useState('');
 //   const [symptoms, setSymptoms] = useState('');
-//   const [slotCreated, setSlotCreated] = useState(null); // holds slot response
+//   const [slotCreated, setSlotCreated] = useState(null);
 //   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
+//   // New state for doctor availability
+//   const [doctorAvailability, setDoctorAvailability] = useState(null);
+//   const [loadingAvailability, setLoadingAvailability] = useState(false);
+//   const [availabilityError, setAvailabilityError] = useState(null);
 
 //   useEffect(() => {
 //     const fetchDoctors = async () => {
@@ -43,6 +47,43 @@
 //     };
 //     fetchDoctors();
 //   }, []);
+
+//   // Handle doctor selection change and fetch availability
+//   const handleDoctorChange = async (e) => {
+//     const selectedId = e.target.value;
+//     setSelectedDoctorId(selectedId);
+//     setDoctorAvailability(null);
+//     setAvailabilityError(null);
+
+//     const doctor = doctors.find(doc => doc.id === parseInt(selectedId));
+//     if (!doctor) return;
+
+//     setLoadingAvailability(true);
+//     try {
+//       // Fetch doctor by name to get availability
+//       const name = doctor.firstName;
+
+//       const res = await axios.get(`http://localhost:8080/api/doctors/name/${name}`);
+
+//       if (res.data.length === 0) {
+//         setAvailabilityError('Doctor not found');
+//         setDoctorAvailability(null);
+//       } else {
+//         const doctorData = res.data[0];
+//         if (doctorData.available === null || doctorData.available === undefined) {
+//           setDoctorAvailability('unknown');
+//         } else if (doctorData.available === true) {
+//           setDoctorAvailability('available');
+//         } else {
+//           setDoctorAvailability('not available');
+//         }
+//       }
+//     } catch (error) {
+//       setAvailabilityError('Failed to get availability', error);
+//       setDoctorAvailability(null);
+//     }
+//     setLoadingAvailability(false);
+//   };
 
 //   const handleCreateSlot = async (e) => {
 //     e.preventDefault();
@@ -74,7 +115,7 @@
 //       const appointmentPayload = {
 //         patientId: parseInt(patientId),
 //         doctorId: selectedDoctorId,
-//         appointmentDateTime: slotCreated.startTime,//new Date(slotCreated.startTime).toISOString(),
+//         appointmentDateTime: slotCreated.startTime,
 //         symptoms
 //       };
 //       console.log('Confirming appointment with payload:', appointmentPayload);
@@ -115,19 +156,29 @@
 //         <Divider sx={{ mb: 3 }} />
 
 //         <form onSubmit={handleCreateSlot}>
-//           <TextField
-//             label="Filter by Specialization"
-//             value={specializationFilter}
-//             onChange={(e) => setSpecializationFilter(e.target.value)}
-//             fullWidth
-//             margin="normal"
-//           />
+//         <TextField
+//           select
+//           label="Filter by Specialization"
+//           value={specializationFilter}
+//           onChange={(e) => setSpecializationFilter(e.target.value)}
+//           fullWidth
+//           margin="normal"
+//           required> 
+//           <MenuItem value="">All Specializations</MenuItem>
+//           <MenuItem value="Dermatologist">Dermatologist</MenuItem>
+//           <MenuItem value="Cardiologist">Cardiologist</MenuItem>
+//           <MenuItem value="Neurologist">Neurologist</MenuItem>
+//           <MenuItem value="Pediatrician">Pediatrician</MenuItem>
+//           <MenuItem value="Orthopedic">Orthopedic</MenuItem>
+//           <MenuItem value="Gynecologist">Gynecologist</MenuItem>
+//         </TextField>
+
 
 //           <TextField
 //             select
 //             label="Select Doctor"
 //             value={selectedDoctorId}
-//             onChange={(e) => setSelectedDoctorId(e.target.value)}
+//             onChange={handleDoctorChange}
 //             fullWidth
 //             margin="normal"
 //             required
@@ -138,6 +189,68 @@
 //               </MenuItem>
 //             ))}
 //           </TextField>
+
+//           {/* Show availability messages */}
+//           {loadingAvailability && (
+//             <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+//               Checking availability...
+//             </Typography>
+//           )}
+
+//           {doctorAvailability === 'available' && startTime && (
+//             <Typography variant="body1" color="success.main" sx={{ mt: 1, mb: 2 }}>
+//               {(() => {
+//                 const selectedDate = new Date(startTime).toDateString();
+//                 const todayDate = new Date().toDateString();
+//                 const doctorName = doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName;
+
+//                 if (selectedDate === todayDate) {
+//                   return `Dr. ${doctorName} is available today. Please proceed.`;
+//                 } else {
+//                   return `Dr. ${doctorName}'s availability for ${selectedDate} is not yet confirmed. You can still proceed with booking.`;
+//                 }
+//               })()}
+//             </Typography>
+//           )}
+
+//           {doctorAvailability === 'not available' && startTime && (
+//             <Typography variant="body1" color="error.main" sx={{ mt: 1 }}>
+//               {(() => {
+//                 const selectedDate = new Date(startTime).toDateString();
+//                 const todayDate = new Date().toDateString();
+//                 const doctorName = doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName;
+
+//                 if (selectedDate === todayDate) {
+//                   return `Dr. ${doctorName} is not available today.`;
+//                 } else {
+//                   return `Dr. ${doctorName}'s availability for ${selectedDate} is not yet confirmed. You can still proceed with booking.`;
+//                 }
+//               })()}
+//             </Typography>
+//           )}
+
+//           {doctorAvailability === 'unknown' && startTime && (
+//             <Typography variant="body1" color="warning.main" sx={{ mt: 1 }}>
+//               {(() => {
+//                 const selectedDate = new Date(startTime).toDateString();
+//                 const todayDate = new Date().toDateString();
+//                 const doctorName = doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName;
+
+//                 if (selectedDate === todayDate) {
+//                   return `Dr. ${doctorName}'s availability is being checked. Please wait or proceed if urgent.`;
+//                 } else {
+//                   return `Dr. ${doctorName}'s availability for ${selectedDate} is not yet known. You can still proceed with booking.`;
+//                 }
+//               })()}
+//             </Typography>
+//           )}
+
+//           {availabilityError && (
+//             <Typography variant="body1" color="error.main" sx={{ mt: 1 }}>
+//               {availabilityError}
+//             </Typography>
+//           )}
+
 
 //           <Grid container spacing={2}>
 //             <Grid item xs={6}>
@@ -180,7 +293,7 @@
 //             fullWidth
 //             sx={{ mt: 3 }}
 //           >
-//             Create Slot & Confirm Appointment
+//             Confirm Appointment
 //           </Button>
 //         </form>
 //       </Paper>
@@ -234,14 +347,17 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Alert
+  Alert,
+  Box,
+  Card,
+  CardContent
 } from '@mui/material';
 import axios from 'axios';
 
 const CreateAppointment = () => {
   const { id } = useParams();
-  const patientId = id; 
-  const navigate = useNavigate();  
+  const patientId = id;
+  const navigate = useNavigate();
 
   const [doctors, setDoctors] = useState([]);
   const [specializationFilter, setSpecializationFilter] = useState('');
@@ -252,7 +368,6 @@ const CreateAppointment = () => {
   const [slotCreated, setSlotCreated] = useState(null);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
-  // New state for doctor availability
   const [doctorAvailability, setDoctorAvailability] = useState(null);
   const [loadingAvailability, setLoadingAvailability] = useState(false);
   const [availabilityError, setAvailabilityError] = useState(null);
@@ -269,7 +384,6 @@ const CreateAppointment = () => {
     fetchDoctors();
   }, []);
 
-  // Handle doctor selection change and fetch availability
   const handleDoctorChange = async (e) => {
     const selectedId = e.target.value;
     setSelectedDoctorId(selectedId);
@@ -281,9 +395,7 @@ const CreateAppointment = () => {
 
     setLoadingAvailability(true);
     try {
-      // Fetch doctor by name to get availability
       const name = doctor.firstName;
-
       const res = await axios.get(`http://localhost:8080/api/doctors/name/${name}`);
 
       if (res.data.length === 0) {
@@ -319,7 +431,6 @@ const CreateAppointment = () => {
         startTime,
         endTime
       };
-      console.log('Creating slot with payload:', slotPayload);
 
       const slotResponse = await axios.post('http://localhost:8080/api/slots', slotPayload);
 
@@ -339,7 +450,6 @@ const CreateAppointment = () => {
         appointmentDateTime: slotCreated.startTime,
         symptoms
       };
-      console.log('Confirming appointment with payload:', appointmentPayload);
 
       await axios.post('http://localhost:8080/api/appointments', appointmentPayload);
 
@@ -368,6 +478,8 @@ const CreateAppointment = () => {
       )
     : doctors;
 
+  const selectedDoctor = doctors.find(doc => doc.id === parseInt(selectedDoctorId));
+
   return (
     <Container maxWidth="sm">
       <Paper elevation={4} sx={{ p: 4, mt: 5, bgcolor: '#f0f4c3' }}>
@@ -377,23 +489,23 @@ const CreateAppointment = () => {
         <Divider sx={{ mb: 3 }} />
 
         <form onSubmit={handleCreateSlot}>
-        <TextField
-          select
-          label="Filter by Specialization"
-          value={specializationFilter}
-          onChange={(e) => setSpecializationFilter(e.target.value)}
-          fullWidth
-          margin="normal"
-          required> 
-          <MenuItem value="">All Specializations</MenuItem>
-          <MenuItem value="Dermatologist">Dermatologist</MenuItem>
-          <MenuItem value="Cardiologist">Cardiologist</MenuItem>
-          <MenuItem value="Neurologist">Neurologist</MenuItem>
-          <MenuItem value="Pediatrician">Pediatrician</MenuItem>
-          <MenuItem value="Orthopedic">Orthopedic</MenuItem>
-          <MenuItem value="Gynecologist">Gynecologist</MenuItem>
-        </TextField>
-
+          <TextField
+            select
+            label="Filter by Specialization"
+            value={specializationFilter}
+            onChange={(e) => setSpecializationFilter(e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          >
+            <MenuItem value="">All Specializations</MenuItem>
+            <MenuItem value="Dermatologist">Dermatologist</MenuItem>
+            <MenuItem value="Cardiologist">Cardiologist</MenuItem>
+            <MenuItem value="Neurologist">Neurologist</MenuItem>
+            <MenuItem value="Pediatrician">Pediatrician</MenuItem>
+            <MenuItem value="Orthopedic">Orthopedic</MenuItem>
+            <MenuItem value="Gynecologist">Gynecologist</MenuItem>
+          </TextField>
 
           <TextField
             select
@@ -411,96 +523,46 @@ const CreateAppointment = () => {
             ))}
           </TextField>
 
-          {/* Show availability messages */}
+          {/* Doctor Details */}
+          {selectedDoctor && (
+            <Card sx={{ mt: 2, mb: 2, bgcolor: '#e3f2fd' }}>
+              <CardContent>
+                <Typography variant="h6">Doctor Details</Typography>
+                <Typography><strong>Experience:</strong> {selectedDoctor.experience} years</Typography>
+                <Typography><strong>Education:</strong> {selectedDoctor.education}</Typography>
+                <Typography><strong>Consultation Fees:</strong> ₹{selectedDoctor.fees}</Typography>
+                <Typography><strong>Location:</strong> {selectedDoctor.location}</Typography>
+              </CardContent>
+            </Card>
+          )}
+
           {loadingAvailability && (
             <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
               Checking availability...
             </Typography>
           )}
 
-          {/* {doctorAvailability === 'available' && (
-            <Typography variant="body1" color="success.main" sx={{ mt: 1 ,mb : 2}}>
-              Dr. {doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName} is available today. Please proceed.
-            </Typography>
-          )} */}
-
-          {/* {doctorAvailability === 'available' && startTime && (
-            <Typography variant="body1" color="success.main" sx={{ mt: 1, mb: 2 }}>
+          {doctorAvailability && startTime && (
+            <Typography
+              variant="body1"
+              color={
+                doctorAvailability === 'available'
+                  ? 'success.main'
+                  : doctorAvailability === 'not available'
+                  ? 'error.main'
+                  : 'warning.main'
+              }
+              sx={{ mt: 1, mb: 2 }}
+            >
               {(() => {
                 const selectedDate = new Date(startTime).toDateString();
                 const todayDate = new Date().toDateString();
-                const doctorName = doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName;
+                const doctorName = selectedDoctor?.firstName || 'Doctor';
 
                 if (selectedDate === todayDate) {
-                  return `Dr. ${doctorName} is available today. Please proceed.`;
+                  return `Dr. ${doctorName} is ${doctorAvailability === 'available' ? '' : 'not '}available today.`;
                 } else {
-                  return `Dr. ${doctorName}'s availability for ${selectedDate} is not yet confirmed. You can still proceed with booking.`;
-                }
-              })()}
-            </Typography>
-          )}
-
-          {doctorAvailability === 'not available' && (
-            <Typography variant="body1" color="error.main" sx={{ mt: 1 }}>
-              Dr. {doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName} is currently not available.
-            </Typography>
-          )}
-
-          {doctorAvailability === 'unknown' && (
-            <Typography variant="body1" color="warning.main" sx={{ mt: 1 }}>
-              Doctor availability info may take time. Please proceed.
-            </Typography>
-          )}
-
-          {availabilityError && (
-            <Typography variant="body1" color="error.main" sx={{ mt: 1 }}>
-              {availabilityError}
-            </Typography>
-          )} */}
-
-          {doctorAvailability === 'available' && startTime && (
-            <Typography variant="body1" color="success.main" sx={{ mt: 1, mb: 2 }}>
-              {(() => {
-                const selectedDate = new Date(startTime).toDateString();
-                const todayDate = new Date().toDateString();
-                const doctorName = doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName;
-
-                if (selectedDate === todayDate) {
-                  return `Dr. ${doctorName} is available today. Please proceed.`;
-                } else {
-                  return `Dr. ${doctorName}'s availability for ${selectedDate} is not yet confirmed. You can still proceed with booking.`;
-                }
-              })()}
-            </Typography>
-          )}
-
-          {doctorAvailability === 'not available' && startTime && (
-            <Typography variant="body1" color="error.main" sx={{ mt: 1 }}>
-              {(() => {
-                const selectedDate = new Date(startTime).toDateString();
-                const todayDate = new Date().toDateString();
-                const doctorName = doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName;
-
-                if (selectedDate === todayDate) {
-                  return `Dr. ${doctorName} is not available today.`;
-                } else {
-                  return `Dr. ${doctorName}'s availability for ${selectedDate} is not yet confirmed. You can still proceed with booking.`;
-                }
-              })()}
-            </Typography>
-          )}
-
-          {doctorAvailability === 'unknown' && startTime && (
-            <Typography variant="body1" color="warning.main" sx={{ mt: 1 }}>
-              {(() => {
-                const selectedDate = new Date(startTime).toDateString();
-                const todayDate = new Date().toDateString();
-                const doctorName = doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName;
-
-                if (selectedDate === todayDate) {
-                  return `Dr. ${doctorName}'s availability is being checked. Please wait or proceed if urgent.`;
-                } else {
-                  return `Dr. ${doctorName}'s availability for ${selectedDate} is not yet known. You can still proceed with booking.`;
+                  return `Dr. ${doctorName}'s availability for ${selectedDate} is not yet confirmed. You can still proceed.`;
                 }
               })()}
             </Typography>
@@ -511,7 +573,6 @@ const CreateAppointment = () => {
               {availabilityError}
             </Typography>
           )}
-
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
@@ -539,7 +600,7 @@ const CreateAppointment = () => {
           </Grid>
 
           <TextField
-            label="Symptoms"
+            label="Describe Your Health Issue"
             value={symptoms}
             onChange={(e) => setSymptoms(e.target.value)}
             fullWidth
@@ -567,11 +628,7 @@ const CreateAppointment = () => {
             Slot created successfully. Do you want to confirm this appointment?
           </Alert>
           <Typography>
-            <strong>Doctor:</strong> {
-              doctors.find(d => d.id === parseInt(selectedDoctorId))?.firstName
-            } {
-              doctors.find(d => d.id === parseInt(selectedDoctorId))?.lastName
-            }
+            <strong>Doctor:</strong> Dr. {selectedDoctor?.firstName} {selectedDoctor?.lastName}
           </Typography>
           <Typography>
             <strong>Time:</strong> {new Date(slotCreated?.startTime).toLocaleString()}

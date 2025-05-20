@@ -36,6 +36,10 @@ public class Doctor {
     @Builder.Default
     private Boolean available = false; // doctor is initially not available unless doctor sets it to true
 
+    private String Experience; // years of experience
+    private String Education; // education details
+    private String Fees; // consultation fees
+
     // Getters
     public Long getId() {
         return id;
@@ -109,4 +113,29 @@ public class Doctor {
     public void setAvailable(boolean available) {
         this.available = available;
     }
+
+    public String getExperience() {
+        return Experience;
+    }
+
+    public void setExperience(String experience) {
+        Experience = experience;
+    }
+
+    public String getEducation() {
+        return Education;
+    }
+
+    public void setEducation(String education) {
+        Education = education;
+    }
+
+    public String getFees() {
+        return Fees;
+    }
+
+    public void setFees(String fees) {
+        Fees = fees;
+    }
+    
 }

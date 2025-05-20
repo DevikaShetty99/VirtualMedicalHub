@@ -55,6 +55,10 @@ public class DoctorController {
         doctor.setPhone(doctorRequest.getPhone());
         doctor.setLocation(doctorRequest.getLocation());
         doctor.setPassword(passwordEncoder.encode(doctorRequest.getPassword()));
+        doctor.setExperience(doctorRequest.getExperience());
+        doctor.setEducation(doctorRequest.getEducation());
+        doctor.setFees(doctorRequest.getFees());
+
         return ResponseEntity.ok(doctorService.createDoctor(doctor));
     }
 

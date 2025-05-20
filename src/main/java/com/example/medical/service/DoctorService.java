@@ -46,6 +46,7 @@ public class DoctorService {
         doctor.setPhone(updatedDoctor.getPhone());
         doctor.setLocation(updatedDoctor.getLocation());
 
+
         return doctorRepository.save(doctor);
     }
 
