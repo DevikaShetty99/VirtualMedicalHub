@@ -454,6 +454,18 @@ const PatientDashboard = () => {
   }
 
   return (
+  <>
+        <Box sx={{
+          position: 'fixed',
+          top: 16,
+          right: 16,
+          zIndex: 1000,
+          display: 'flex',
+          gap: 1,
+        }}>
+          <Button variant="outlined" onClick={() => navigate('/')}>Home</Button>
+        </Box>
+
     <Container maxWidth="md">
       {/* Patient Info */}
       <Paper elevation={4} sx={{ p: 4, mt: 5, bgcolor: '#f9f9f9' }}>
@@ -669,6 +681,7 @@ const PatientDashboard = () => {
         </Alert>
       </Snackbar>
     </Container>
+  </>
   );
 };
 

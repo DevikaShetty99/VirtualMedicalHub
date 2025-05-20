@@ -30,7 +30,7 @@ const App = () => {
 
   return (
     <>
-      {/* Top-right Patient Help Manual */}
+      {/* Top-right buttons */}
       <Box
         sx={{
           position: 'fixed',
@@ -47,7 +47,11 @@ const App = () => {
         <Button variant="outlined" onClick={() => setFeedbackOpen(true)}>
           Give Feedback
         </Button>
+        <Button variant="outlined" onClick={() => navigate('/')}>
+          Home
+        </Button>
       </Box>
+
 
       <Container maxWidth="sm" style={{ marginTop: '100px', textAlign: 'center' }}>
         <Typography variant="h4" gutterBottom>
@@ -97,6 +101,7 @@ const App = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
     </>
   )
 }

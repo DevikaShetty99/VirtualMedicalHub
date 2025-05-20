@@ -755,6 +755,19 @@ const DoctorDashboard = () => {
   if (!doctor) return <Container><Typography>No doctor data found.</Typography></Container>;
 
   return (
+
+    <>
+    <Box sx={{
+        position: 'fixed',
+        top: 16,
+        right: 16,
+        zIndex: 1000,
+        display: 'flex',
+        gap: 1,
+      }}>
+        <Button variant="outlined" onClick={() => navigate('/')}>Home</Button>
+      </Box>
+
     <Container maxWidth="md">
       {/* Doctor Info */}
       <Paper elevation={3} sx={{ p: 4, mt: 5 }}>
@@ -889,6 +902,7 @@ const DoctorDashboard = () => {
         ))}
       </Paper>
     </Container>
+    </>
   );
 };
 
