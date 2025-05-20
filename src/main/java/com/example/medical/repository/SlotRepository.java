@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface SlotRepository extends JpaRepository<Slot,Long> {
     List<Slot> findByDoctorAndIsAvailableTrue(Doctor doctor);
     Optional<Slot> findByDoctorAndStartTime(Doctor doctor, LocalDateTime startTime);
+    List<Slot> findByDoctorId(Long doctorId);
+    
 }

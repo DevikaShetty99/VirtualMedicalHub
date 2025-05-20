@@ -72,8 +72,6 @@ const PatientDashboard = () => {
           <Typography><strong>Address:</strong> {patient.address || 'N/A'}</Typography>
           <Typography><strong>Health History:</strong> {patient.healthHistory}</Typography>
           <Typography><strong>Emergency Contact:</strong> {patient.emergencyContact}</Typography>
-          <Typography><strong>Created At:</strong> {new Date(patient.createdDate).toLocaleString()}</Typography>
-          <Typography><strong>Updated At:</strong> {new Date(patient.updatedDate).toLocaleString()}</Typography>
         </Box>
       </Paper>
 
@@ -109,7 +107,7 @@ const PatientDashboard = () => {
                 <strong>Slot:</strong> {new Date(appt.slot.startTime).toLocaleString()} - {new Date(appt.slot.endTime).toLocaleString()}
               </Typography>
               <Typography><strong>Created:</strong> {new Date(appt.createdAt).toLocaleString()}</Typography>
-              <Typography><strong>Updated:</strong> {new Date(appt.updatedAt).toLocaleString()}</Typography>
+              {/* <Typography><strong>Updated:</strong> {new Date(appt.updatedAt).toLocaleString()}</Typography> */}
             </Paper>
           ))
         )}

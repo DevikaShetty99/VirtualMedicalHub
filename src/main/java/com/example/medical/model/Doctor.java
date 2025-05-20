@@ -32,6 +32,10 @@ public class Doctor {
 
     private String password;  // For authentication
 
+    @Column(name = "available")
+    @Builder.Default
+    private Boolean available = false; // doctor is initially not available unless doctor sets it to true
+
     // Getters
     public Long getId() {
         return id;
@@ -96,5 +100,13 @@ public class Doctor {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+    
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

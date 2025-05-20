@@ -85,6 +85,24 @@ public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody
     return new ResponseEntity<>(updatedPatient, HttpStatus.OK);
 }
 
-
-
+@PostMapping("/login")
+public ResponseEntity<?> loginPatient(@RequestBody PatientLoginRequest request) {
+    System.out.println("Login attempt for email: " + request.getEmail() + ", password: " + request.getPassword());
+ 
+    Patient patient = patientRepository.findByEmail(request.getEmail());
+ 
+    if (patient == null) {
+        System.out.println("Patient not found");
+        return ResponseEntity.status(401).body("Invalid credentials");
+    }
+ 
+    boolean matches = request.getPassword().equals(patient.getPassword());
+    System.out.println("Password match result: " + matches);
+ 
+    if (!matches) {
+        return ResponseEntity.status(401).body("Invalid credentials");
+    }
+ 
+    return ResponseEntity.ok(patient);
+}
 }
