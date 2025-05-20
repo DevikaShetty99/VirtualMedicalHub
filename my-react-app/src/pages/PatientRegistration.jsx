@@ -238,19 +238,29 @@ export default function PatientRegistration() {
 
         {tab === 1 && (
           <Box component="form" onSubmit={handleRegister} noValidate>
-            <TextField fullWidth label="Full Name" name="name" value={formData.name} onChange={handleInputChange} margin="normal" />
+            <TextField fullWidth label="Full Name" name="name" value={formData.name} onChange={handleInputChange} margin="normal" required/>
             <TextField fullWidth label="Age" name="age" type="number" value={formData.age} onChange={handleInputChange} margin="normal" />
-            <TextField fullWidth label="Email" name="email" value={formData.email} onChange={handleInputChange} margin="normal" />
+            <TextField fullWidth label="Email" name="email" value={formData.email} onChange={handleInputChange} margin="normal" required/>
             <TextField fullWidth label="Phone" name="phone" value={formData.phone} onChange={handleInputChange} margin="normal" />
             <TextField fullWidth label="Address" name="address" value={formData.address} onChange={handleInputChange} margin="normal" />
             <TextField fullWidth label="Gender" name="gender" value={formData.gender} onChange={handleInputChange} margin="normal" />
             <TextField fullWidth label="Health History" name="healthHistory" value={formData.healthHistory} onChange={handleInputChange} margin="normal" />
             <TextField fullWidth label="Emergency Contact" name="emergencyContact" value={formData.emergencyContact} onChange={handleInputChange} margin="normal" />
-            <TextField fullWidth label="Password" name="password" type="password" value={formData.password} onChange={handleInputChange} margin="normal" />
+            <TextField fullWidth label="Password" name="password" type="password" value={formData.password} onChange={handleInputChange} margin="normal" required/>
 
-            <Button variant="contained" fullWidth type="submit" sx={{ mt: 2 }}>
-              Register
-            </Button>
+            <Button
+            variant="contained"
+            fullWidth
+            type="submit"
+            sx={{ mt: 2 }}
+            disabled={
+              !formData.name?.trim() ||
+              !formData.email?.trim() ||
+              !formData.password?.trim()
+            }
+          >
+            Register
+          </Button>
           </Box>
         )}
 

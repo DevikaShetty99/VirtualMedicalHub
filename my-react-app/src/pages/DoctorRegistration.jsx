@@ -258,20 +258,36 @@ export default function DoctorRegistration() {
 
         {tab === 1 && (
           <Box component="form" onSubmit={handleRegisterSubmit} noValidate sx={{ mt: 2 }}>
-            <TextField fullWidth label="First Name" name="firstName" onChange={handleRegisterChange} margin="normal" />
-            <TextField fullWidth label="Last Name" name="lastName" onChange={handleRegisterChange} margin="normal" />
-            <TextField fullWidth label="Specialization" name="specialization" onChange={handleRegisterChange} margin="normal" />
-            <TextField fullWidth label="Email" name="email" type="email" onChange={handleRegisterChange} margin="normal" />
-            <TextField fullWidth label="Phone" name="phone" onChange={handleRegisterChange} margin="normal" />
-            <TextField fullWidth label="Location" name="location" onChange={handleRegisterChange} margin="normal" />
-            <TextField fullWidth label="Password" name="password" type="password" onChange={handleRegisterChange} margin="normal" />
-            <TextField fullWidth label="Experience (Years)" name="experience" onChange={handleRegisterChange} margin="normal" />
-            <TextField fullWidth label="Education" name="education" onChange={handleRegisterChange} margin="normal" />
-            <TextField fullWidth label="Fees" name="fees" onChange={handleRegisterChange} margin="normal" />
+            <TextField fullWidth label="First Name" name="firstName" value={formData.firstName} onChange={handleRegisterChange} margin="normal" required/>
+            <TextField fullWidth label="Last Name" name="lastName" value={formData.lastName} onChange={handleRegisterChange} margin="normal" required/>
+            <TextField fullWidth label="Specialization" name="specialization" value={formData.specialization} onChange={handleRegisterChange} margin="normal" required/>
+            <TextField fullWidth label="Email" name="email" type="email" value={formData.email} onChange={handleRegisterChange} margin="normal" required/>
+            <TextField fullWidth label="Phone" name="phone" value={formData.phone} onChange={handleRegisterChange} margin="normal" />
+            <TextField fullWidth label="Location" name="location" value={formData.location} onChange={handleRegisterChange} margin="normal" />
+            <TextField fullWidth label="Experience (Years)" name="experience" value={formData.experience} onChange={handleRegisterChange} margin="normal" />
+            <TextField fullWidth label="Education" name="education" value={formData.education} onChange={handleRegisterChange} margin="normal" />
+            <TextField fullWidth label="Fees" name="fees" value={formData.fees} onChange={handleRegisterChange} margin="normal" required/>
+            <TextField fullWidth label="Password" name="password" type="password" value={formData.password} onChange={handleRegisterChange} margin="normal" required/>
+            {/* <Button variant="contained" fullWidth type="submit" sx={{ mt: 2 }}>
+              Registersss
+            </Button> */}
+            <Button
+            variant="contained"
+            fullWidth
+            type="submit"
+            sx={{ mt: 2 }}
+            disabled={
+              !formData.firstName?.trim() ||
+              !formData.lastName?.trim() ||
+              !formData.specialization?.trim() ||
+              !formData.email?.trim() ||
+              !formData.fees?.toString().trim() ||
+              !formData.password?.trim()
+            }
+          >
+            Register
+          </Button>
 
-            <Button variant="contained" fullWidth type="submit" sx={{ mt: 2 }}>
-              Register
-            </Button>
           </Box>
         )}
       </Paper>
