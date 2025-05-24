@@ -47,9 +47,6 @@ const App = () => {
         <Button variant="outlined" onClick={() => setFeedbackOpen(true)}>
           Give Feedback
         </Button>
-        <Button variant="outlined" onClick={() => navigate('/')}>
-          Home
-        </Button>
       </Box>
 
 

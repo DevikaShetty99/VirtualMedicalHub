@@ -2,9 +2,14 @@ package com.example.medical.controller;
 
 import com.example.medical.dto.PatientRequest;
 import com.example.medical.dto.PatientLoginRequest;
+import com.example.medical.model.Doctor;
+import com.example.medical.model.JwtResponse;
+import com.example.medical.model.LoginRequest;
 import com.example.medical.model.Patient;
 import com.example.medical.repository.PatientRepository;
 import com.example.medical.service.PatientService;
+import com.example.medical.util.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +29,9 @@ public class PatientController {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     PatientRepository patientRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
     // Create or update a patient
     @PostMapping
     public ResponseEntity<Patient> createOrUpdatePatient(@RequestBody Patient patient) {
@@ -90,25 +98,58 @@ public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody
     return new ResponseEntity<>(updatedPatient, HttpStatus.OK);
 }
 
-@PostMapping("/login")
-public ResponseEntity<?> loginPatient(@RequestBody PatientLoginRequest request) {
-    System.out.println("Login attempt for email: " + request.getEmail());
+// @PostMapping("/login")
+// public ResponseEntity<?> loginPatient(@RequestBody PatientLoginRequest request) {
+//     System.out.println("Login attempt for email: " + request.getEmail());
 
-        Patient patient = patientRepository.findByEmail(request.getEmail());
+//         Patient patient = patientRepository.findByEmail(request.getEmail());
 
+//         if (patient == null) {
+//             System.out.println("Patient not found");
+//             return ResponseEntity.status(401).body("Invalid credentials");
+//         }
+
+//         boolean matches = passwordEncoder.matches(request.getPassword(), patient.getPassword());
+//         System.out.println("Password match result: " + matches);
+
+//         if (!matches) {
+//             return ResponseEntity.status(401).body("Invalid credentials");
+//         }
+
+//         return ResponseEntity.ok(patient);
+// }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        Patient patient = patientRepository.findByEmail(loginRequest.getEmail());
         if (patient == null) {
-            System.out.println("Patient not found");
             return ResponseEntity.status(401).body("Invalid credentials");
         }
 
-        boolean matches = passwordEncoder.matches(request.getPassword(), patient.getPassword());
-        System.out.println("Password match result: " + matches);
-
-        if (!matches) {
+        if (passwordEncoder.matches(loginRequest.getPassword(), patient.getPassword())) {
+            String token = jwtUtil.generateToken(patient.getEmail());
+            return ResponseEntity.ok(new JwtResponse(token, patient.getId())); // <-- return ID too
+        } else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
+    }
 
-        return ResponseEntity.ok(patient);
-}
+
+    @PostMapping("/validate")
+    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
+        try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            if (jwtUtil.validateToken(token)) {
+                String email = jwtUtil.extractEmail(token);
+                return ResponseEntity.ok("Token is valid for user: " + email);
+            } else {
+                return ResponseEntity.status(401).body("Invalid token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Invalid token");
+        }
+    }
 
 }

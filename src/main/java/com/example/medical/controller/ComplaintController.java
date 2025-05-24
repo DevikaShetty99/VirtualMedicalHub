@@ -33,7 +33,7 @@ public class ComplaintController {
     @Autowired
     private DoctorRepository doctorRepository;
     @Autowired
-private PrescriptionService prescriptionService;
+    private PrescriptionService prescriptionService;
 
     @PostMapping
     public ResponseEntity<Complaint> createComplaint(@RequestBody CreateComplaintRequest request) {

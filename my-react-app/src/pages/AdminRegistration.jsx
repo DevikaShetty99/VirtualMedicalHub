@@ -14,17 +14,30 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Hardcoded admin credentials
-    if (
-      email === 'admin@vmh.com' &&
-      password === 'admin@virtual4@123'
-    ) {
-      navigate('/admin-dashboard');
-    } else {
-      alert('Invalid credentials!');
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      console.log('Response:', response);
+      // Check if the response is ok (status in the range 200-299)
+      
+
+      if (response.ok) {
+        const data = await response.json();
+        // Save JWT token in localStorage
+        localStorage.setItem('jwt', data.token);
+        navigate('/admin-dashboard');
+      } else {
+        alert('Invalid credentials!');
+      }
+    } catch (error) {
+      alert('Error connecting to server: ' + error.message);
     }
   };
 

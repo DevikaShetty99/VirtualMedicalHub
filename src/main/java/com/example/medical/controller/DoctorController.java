@@ -1,9 +1,12 @@
 package com.example.medical.controller;
 
 import com.example.medical.model.Doctor;
+import com.example.medical.model.JwtResponse;
+import com.example.medical.model.LoginRequest;
 import com.example.medical.repository.DoctorRepository;
 import com.example.medical.dto.DoctorRequest;
 import com.example.medical.dto.DoctorLoginRequest;
+import com.example.medical.util.JwtUtil;
 import com.example.medical.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,9 @@ public class DoctorController {
 
     @Autowired
     private DoctorRepository doctorRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // ✅ Get all doctors
     @GetMapping
@@ -96,27 +102,27 @@ public class DoctorController {
         return ResponseEntity.noContent().build();
     }
 
-    // ✅ Doctor login
-    @PostMapping("/login")
-    public ResponseEntity<?> loginDoctor(@RequestBody DoctorLoginRequest request) {
-        System.out.println("Login attempt for email: " + request.getEmail());
+    // // ✅ Doctor login
+    // @PostMapping("/login")
+    // public ResponseEntity<?> loginDoctor(@RequestBody DoctorLoginRequest request) {
+    //     System.out.println("Login attempt for email: " + request.getEmail());
 
-        Doctor doctor = doctorRepository.findByEmail(request.getEmail());
+    //     Doctor doctor = doctorRepository.findByEmail(request.getEmail());
 
-        if (doctor == null) {
-            System.out.println("Doctor not found");
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
+    //     if (doctor == null) {
+    //         System.out.println("Doctor not found");
+    //         return ResponseEntity.status(401).body("Invalid credentials");
+    //     }
 
-        boolean matches = passwordEncoder.matches(request.getPassword(), doctor.getPassword());
-        System.out.println("Password match result: " + matches);
+    //     boolean matches = passwordEncoder.matches(request.getPassword(), doctor.getPassword());
+    //     System.out.println("Password match result: " + matches);
 
-        if (!matches) {
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
+    //     if (!matches) {
+    //         return ResponseEntity.status(401).body("Invalid credentials");
+    //     }
 
-        return ResponseEntity.ok(doctor);
-    }
+    //     return ResponseEntity.ok(doctor);
+    // }
 
     // Update only availability
     @PutMapping("/{id}/availability")
@@ -125,5 +131,54 @@ public class DoctorController {
         doctor.setAvailable(available);
         return ResponseEntity.ok(doctorService.updateDoctor(id, doctor));
     }
+
+    // @PostMapping("/login")
+    // public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    //     Doctor doctor = doctorRepository.findByEmail(loginRequest.getEmail());
+    //     if (doctor == null) {
+    //         return ResponseEntity.status(401).body("Invalid credentials");
+    //     }
+
+    //     if (passwordEncoder.matches(loginRequest.getPassword(), doctor.getPassword())) {
+    //         String token = jwtUtil.generateToken(doctor.getEmail());
+    //         return ResponseEntity.ok(new JwtResponse(token));
+    //     } else {
+    //         return ResponseEntity.status(401).body("Invalid credentials");
+    //     }
+    // }
+
+    @PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    Doctor doctor = doctorRepository.findByEmail(loginRequest.getEmail());
+    if (doctor == null) {
+        return ResponseEntity.status(401).body("Invalid credentials");
+    }
+
+    if (passwordEncoder.matches(loginRequest.getPassword(), doctor.getPassword())) {
+        String token = jwtUtil.generateToken(doctor.getEmail());
+        return ResponseEntity.ok(new JwtResponse(token, doctor.getId())); // <-- return ID too
+    } else {
+        return ResponseEntity.status(401).body("Invalid credentials");
+    }
+}
+
+
+    @PostMapping("/validate")
+    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
+        try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            if (jwtUtil.validateToken(token)) {
+                String email = jwtUtil.extractEmail(token);
+                return ResponseEntity.ok("Token is valid for user: " + email);
+            } else {
+                return ResponseEntity.status(401).body("Invalid token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Invalid token");
+        }
+    }
+
 
 }
